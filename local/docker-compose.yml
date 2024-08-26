@@ -1,0 +1,15 @@
+networks:
+  kafka-net:
+    name: kafka-net
+    driver: bridge
+
+services:
+  ndvi-worker:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: ndvi-worker
+    env_file:
+      - .env
+    networks:
+      - kafka-net
