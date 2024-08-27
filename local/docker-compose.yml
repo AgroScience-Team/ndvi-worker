@@ -2,6 +2,9 @@ networks:
   kafka-net:
     name: kafka-net
     driver: bridge
+  agronetwork:
+    name: agronetwork
+    driver: bridge
 
 services:
   ndvi-worker:
@@ -13,3 +16,4 @@ services:
       - .env
     networks:
       - kafka-net
+      - agronetwork
