@@ -15,3 +15,10 @@ class WorkersResultsTopic(Topic):
 
     def __init__(self, conf: KafkaConf):
         super().__init__(conf, "workers.results")
+
+
+@Component()
+class AuditTopic(Topic):
+
+    def __init__(self, conf: KafkaConf):
+        super().__init__(conf, "agroscienceteam.audit.messages")

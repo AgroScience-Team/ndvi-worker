@@ -5,6 +5,10 @@ import sys
 
 from ioc.anotations.proxy.proxy_configurator import ProxyConfigurator
 from ioc.kafka.producers.producer import Producer
+from src.infra.models.audit_entity import AuditEntity
+from src.infra.models.audit_with_result import AuditEntityWithResult
+from src.infra.models.error_audit import ErrorAudit
+from src.infra.models.fatal_audit import FatalAudit
 
 
 class AuditProxyConfigurator(ProxyConfigurator):
