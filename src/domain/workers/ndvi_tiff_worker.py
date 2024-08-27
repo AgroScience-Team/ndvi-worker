@@ -5,6 +5,7 @@ import rasterio.windows
 from minio import Minio
 
 from ioc.anotations.beans.component import Component
+from ioc.anotations.proxy.log.log import Log
 from ioc.kafka.producers.producer import Producer
 from src.domain.workers.abstract_worker import Worker
 from src.domain.workers.result import Result
@@ -22,13 +23,15 @@ class NdviTiffWorker(Worker):
         self._bucket_name = os.getenv("MINIO_BUCKET")
         self._result_topic = os.getenv("kafka.topics.workers-results.name")
         self._producer: Producer = producer
+        self._key = "tif"
 
+    @Log()
     def process(self, message):
         try:
             with rasterio.Env(AWS_HTTPS='NO', GDAL_DISABLE_READDIR_ON_OPEN='YES', AWS_VIRTUAL_HOSTING=False,
-                              AWS_S3_ENDPOINT='localhost:9000'):
-                path_red_tiff = f"{message}-red"
-                path_nir_tiff = f"{message}-nir"
+                              AWS_S3_ENDPOINT=os.getenv("MINIO_URL")):
+                path_red_tiff = f"/vsis3/files/{message}-red.{self._key}"
+                path_nir_tiff = f"/vsis3/files/{message}-nir.{self._key}"
                 with rasterio.open(path_red_tiff) as red_tif, rasterio.open(path_nir_tiff) as nir_tif:
                     profile = red_tif.profile
                     height, width = red_tif.shape
@@ -51,7 +54,7 @@ class NdviTiffWorker(Worker):
                                     ndvi_chunk = (nir_chunk - red_chunk) / (nir_chunk + red_chunk)
                                     dst_ndvi.write(ndvi_chunk, window=window)
 
-                        object_name = f"{message}-tiff"
+                        object_name = f"{message}-ndvi.{self._key}"
                         self.minio_client.fput_object(self._bucket_name, object_name, output_path,
                                                       content_type='image/tiff')
 
@@ -63,4 +66,4 @@ class NdviTiffWorker(Worker):
             raise e
 
     def get_my_key(self) -> str:
-        return "tiff"
+        return self._key
