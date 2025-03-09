@@ -90,8 +90,8 @@ class ApplicationContext:
             for scheduled_bean in self._scheduled_beans:
                 try:
                     scheduled_bean.schedule()
-                except Exception:
-                    log.error(f"Scheduling error {str(scheduled_bean.__class__)}")
+                except Exception as e:
+                    log.exception(f"Scheduling error {str(scheduled_bean.__class__)}: {str(e)}")
 
     def run(self):
         log.info("Run application context")

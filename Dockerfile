@@ -7,12 +7,11 @@ WORKDIR /ndvi-worker
 COPY pyproject.toml poetry.lock ./
 
 RUN poetry install --no-root
+RUN apt update && apt install -y libexpat1
 
 COPY ioc ./ioc
 COPY src ./src
 
 ENV PYTHONPATH "${PYTHONPATH}:/ndvi-worker"
-
-RUN poetry install
 
 CMD ["poetry", "run", "python", "./src/main.py"]
