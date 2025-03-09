@@ -7,18 +7,18 @@ from ioc.kafka.topics.new_topic import Topic
 class NdviTopic(Topic):
 
     def __init__(self, conf: KafkaConf):
-        super().__init__(conf, "ndvi")
+        super().__init__(conf, "agro.workers.ndvi")
 
 
 @Component()
 class WorkersResultsTopic(Topic):
 
     def __init__(self, conf: KafkaConf):
-        super().__init__(conf, "workers.results")
+        super().__init__(conf, "agro.workers.results")
 
 
 @Component()
 class AuditTopic(Topic):
 
     def __init__(self, conf: KafkaConf):
-        super().__init__(conf, "agroscienceteam.audit.messages")
+        super().__init__(conf, "agro.audit.messages")

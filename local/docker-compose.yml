@@ -17,3 +17,4 @@ services:
     networks:
       - kafka-net
       - agronetwork
+    mem_limit: 2048m

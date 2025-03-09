@@ -13,4 +13,4 @@ value: uuid-example
 Воркер пытается найти в s3 файлы формата uuid-example-nir.tif и uuid-example-red.tif. В случае успеха  
 считается ndvi и сохраняется по шаблону uuid-example-ndvi.tif.
 
-4) [Результат](../src/domain/workers/result.py) работы сохраняется в топик workers.results
+4) [Результат](../src/domain/models/result.py) работы сохраняется в топик workers.results
