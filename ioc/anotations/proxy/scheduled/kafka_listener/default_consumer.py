@@ -21,7 +21,7 @@ class DefaultScheduledConsumer(Consumer, Scheduled):
             enable_auto_commit=True,
             value_deserializer=lambda m: _safe_deserialize(m),
             key_deserializer=lambda m: _safe_deserialize(m),
-            security_protocol='SASL_PLAINTEXT',
+            security_protocol=conf.get_kafka_security_protocol(),
             sasl_mechanism='PLAIN',
             sasl_plain_username=conf.get_kafka_user(),
             sasl_plain_password=conf.get_kafka_password(),

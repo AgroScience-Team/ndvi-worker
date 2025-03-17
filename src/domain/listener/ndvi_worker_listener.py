@@ -1,5 +1,4 @@
 import json
-import os
 from typing import Dict
 
 from ioc.anotations.beans.component import Component
@@ -10,9 +9,9 @@ from ioc.kafka.consumers.consumer_record import ConsumerRecord
 from ioc.kafka.producers.producer import Producer
 from src.domain.listener.abstract_listener import Listener
 from src.domain.listener.not_supported_exception import NotSupportedException
+from src.domain.models.result import Result, result_factory
 from src.domain.models.worker_input import WorkerInput
 from src.domain.workers.abstract_worker import Worker
-from src.domain.models.result import Result, result_factory
 from src.infra.audit.audit import Audit
 
 
@@ -34,8 +33,8 @@ class NdviWorkerListener(Listener):
             self.workers.get(input.extension).process(input)
         else:
             log.warn(f"No worker with extension {input.extension}")
-            res: Result = result_factory(message, None, False, "ndvi-preview")
+            res: Result = result_factory(input, None, False, "ndvi-preview")
             self._producer.produce(self._result_topic, "", res.json())
-            res: Result = result_factory(message, None, False, "ndvi")
+            res: Result = result_factory(input, None, False, "ndvi")
             self._producer.produce(self._result_topic, "", res.json())
             raise NotSupportedException(f"File with extension {input.extension} not supported")
