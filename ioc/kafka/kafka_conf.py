@@ -24,17 +24,22 @@ class KafkaConf(ABC):
     def get_kafka_admin_client(self):
         pass
 
+    @abstractmethod
+    def get_kafka_security_protocol(self):
+        pass
+
 
 @Component()
 class DefaultKafkaConf(KafkaConf):
     def __init__(self):
-        self._KAFKA_USER = os.getenv('kafka.user')
-        self._KAFKA_PASSWORD = os.getenv('kafka.password')
+        self._KAFKA_USER = os.getenv('kafka.user', None)
+        self._KAFKA_PASSWORD = os.getenv('kafka.password', None)
         self._KAFKA_BOOTSTRAP_SERVERS = os.getenv('kafka.bootstrap-servers')
+        self._KAFKA_SECURITY_PROTOCOL = os.getenv('KAFKA_SECURITY_PROTOCOL', "SASL_PLAINTEXT")
         log.info(f"DefaultKafkaConf started {self._KAFKA_USER}|{self._KAFKA_PASSWORD}|{self._KAFKA_BOOTSTRAP_SERVERS}")
         self._kafka_admin_client = KafkaAdminClient(
             bootstrap_servers=self._KAFKA_BOOTSTRAP_SERVERS,
-            security_protocol="SASL_PLAINTEXT",
+            security_protocol=self._KAFKA_SECURITY_PROTOCOL,
             sasl_mechanism="PLAIN",
             sasl_plain_username=self._KAFKA_USER,
             sasl_plain_password=self._KAFKA_PASSWORD,
@@ -53,3 +58,6 @@ class DefaultKafkaConf(KafkaConf):
 
     def get_kafka_admin_client(self):
         return self._kafka_admin_client
+
+    def get_kafka_security_protocol(self):
+        return self._KAFKA_SECURITY_PROTOCOL

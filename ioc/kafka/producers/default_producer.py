@@ -13,7 +13,7 @@ class DefaultProducer(Producer):
             bootstrap_servers=conf.get_kafka_bootstrap_servers(),
             value_serializer=lambda v: v.encode('utf-8'),
             key_serializer=lambda v: v.encode('utf-8') if v is not None else None,
-            security_protocol='SASL_PLAINTEXT',
+            security_protocol=conf.get_kafka_security_protocol(),
             sasl_mechanism='PLAIN',
             sasl_plain_username=conf.get_kafka_user(),
             sasl_plain_password=conf.get_kafka_password()
